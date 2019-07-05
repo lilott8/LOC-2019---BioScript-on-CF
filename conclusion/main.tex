@@ -1,0 +1,42 @@
+%=================================================================================
+% Conclusion
+%=================================================================================
+% This is for interpretation of the key results and to highlight the novelty and significance of the work. The conclusions should not summarise information already present in the article or abstract. Plans for relevant future work can also be included.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have both provided and demonstrated a grand vision for the future of design and fabrication of flow-based microfluidic devices.
+This vision prescribes a fundamental change in the way flow-based assays are currently expressed and then fabricated; relying on an automated synthesis framework to allow for increasingly complex devices.
+This vision is not perfect nor complete, but makes significant tangible progress aiming to reduce the perpetual ``5 year'' promise of radical transformation.
+There are many outstanding questions requiring answers to further this vision, but are outside the scope of this paper.
+
+%=================================================================================
+% Future Work
+%=================================================================================
+%\subsection{Future Work}
+%\label{sec:future_work}
+One orthogonal research avenue would be exploring component reuse and reduction.
+Current devices are not large, spatially; however, they can be comprised of dozens of components.
+Designing these devices doesn't explicitly identify components capable of reuse.
+Automatically detecting and reducing components can reduce design and fabrication time.
+Further, component reuse could allow an otherwise unfabricatable device to be fabricated.
+This avenue is only possible in active flow devices, as fluid may be flowing backwards through the device.
+
+As noted in \cref{sec:results_discussion}, fluidic properties (e.g., viscosity, concentration, or density) are not captured in the front-end (BioScript) or utilized during device synthesis (Inkwell).
+By capturing these properties, \tool{} could further reduce the need for expertise required in fabricating and verifying more interesting and complicated devices.
+One interesting application of including fluidic properties is solute separation -- making separating blood cells and cancer cells significantly simpler while using far less blood.
+Including these properties has implications for the inclusion of timing constraints as well.
+Timing constraints allow a user to specify that a particular fluidic variable must be used within a particular time interval.
+
+Inclusion of fluidic properties would directly influence component generation and selection.
+The compiler and synthesis tools can take fluidic properties and make decisions during component generation or selection to deliver the best device possible; manipulating channel width or geometries, influencing placement and routing, or even simply selecting the best component for the fluid.
+
+Finally, extending the compiler to include active-flow devices, devices that use pumps to move fluid through the channels, instead of back pressure or gravity, would be a natural extension; allowing active control of the device --- the ability to change execution based on various readings or inputs.
+This would require a further extension to all 4 steps denoted in \cref{fig:workflow}.
+Component selection and generation would need to include components that are able to be controlled.
+The compiler would need to know how the selected components behave, and how to actuate them.
+Fabricating a device with multiple layers is feasible; however, still requires some fashion of human intervention.
+The different layers would have to be aligned precisely so they can be bonded.
+This step, in using the cost-effective CNC mill, requires human intervention.
+Execution of the assay would require a feedback loop that can notify the compiler of any changes to execution.

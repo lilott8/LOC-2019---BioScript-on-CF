@@ -1,0 +1,67 @@
+%=================================================================================
+% Experimental
+%=================================================================================
+\section{Experimental}
+\label{sec:experimental}
+The architecture of \tool{}, as depicted in \cref{fig:workflow}, amounts to the experimental setup.
+It is comprised of extending and integrating \bs{} with Inkwell in order to include support for (1) targeting Inkwell, (2) component selection, (3) device fabrication, and (4) execution.
+
+%=================================================================================
+% BioScript
+%=================================================================================
+\subsection{\bs{}}
+\label{sec:bioscript}
+
+We extend the \bs{} compiler, (1) in \cref{fig:workflow}, with the ability to target continuous flow devices.
+This amounts to extending the available targets to include an Inkwell\cite{mcdaniel2018design} target.
+Part of this extension includes: component selection, ParchMint generation, and, optionally building a valve actuation sequence.
+In component selection, the target selects the best component that matches the function of the operation.
+For instance, given the instruction in line 7 of \cref{fig:bs_program}, the target will pick a serpentine or circular mixer for passive and active flow devices, respectively.
+It is parameterized such that if a time definition exists on the $\textsf{mix}$ instruction, component selection will attempt to select the best match; opting to round up when necessary.\footnote{We acknowledge that without additional knowledge of the properties of the fluids (e.g. density, viscosity), a `best match' mixing component may not be appropriate to achieve homogeneity between the operands.}
+Once components are selected, the compiler builds the connections between these components as a netlist (\cref{fig:net_list}).
+A connection is defined as a via between a component that \textit{defines} a variable\footnote{A variable is defined when it appears on the \textit{left}-hand side of a statement, e.g., $a = 3$, $a$ is defined as $3$.} and any \textit{uses}\footnote{A usage of a variable is when a variable appears on the \textit{right}-hand side of a statement, e.g., $b = a + 3$. Where $a$ is being used in a statement, but not defined.}.
+If the target device is an active-flow device, the compiler will further generate the valve actuation sequence required to actuate the necessary valves on the device for pumping the fluid(s) through the device.
+Once \bs{} finishes compilation, the netlist is sent to Inkwell to begin the fabrication process.
+\jasoni{From Brian: We should cite the ParchMint format here (and perhaps include a link to the website/github) since I don't think its mentioned anywhere else as the interchange format.}
+
+
+%=================================================================================
+% Inkwell
+%=================================================================================
+\subsection{Inkwell}
+\label{sec:inkwell}
+
+% After \bs{} has converted the high-level language assay into a netlist it needs to be placed and routed to generate a design for fabrication.
+The input netlist contains a number of components and connections between them, however it does not specify where each component will be located on the device or what route each connection will take to physically connect two components via their ports. Inkwell is an highly extensible system takes a netlist as input and performs placement, routing, and pre/post-processing steps to both the flow and control layer as necessary to generate a design for fabrication. Each step of the process is designed to be modular so new algorithms and process can be introduced, and a ParchMint file can be ingested or generated at any point in the process to allow Inkwell to work in concert with other tools. For this experiment the planar placement and routing method was used with no pre/post-processing steps \cite{mcdaniel2015flow}.
+
+\jasoni{From Brian: I'm not sure how much we want to talk about Inkwell specifically here so I left it pretty general and short (if we have some more room I would love to dump a bunch of self citations here such as DICE and Seam Carving). I also wasn't sure what to call this step (architectural synthesis I don't think is appropriate in this case) which I think makes it read a bit weird. }
+
+%=================================================================================
+% Component Selection
+%=================================================================================
+\subsection{Component Selection \& Generation}
+\label{sec:component_selection}
+
+As discussed in \cref{sec:synthesis}, component selection isn't an active area of research.
+In order for \tool{} to correctly map \bs{} instructions to their corresponding component, \tool{} employs a naive solution, relying upon a simple mapping of pre-generated components.
+This naive implementation is flexible enough to demonstrate efficacy of \tool{} while still maintaining fidelity with commonly utilized assays.
+However, we recognize that \tool{} is currently not capable of capturing the true nuances of fluids and how they behave flowing through their selected components.
+\briani{Do we plan on addressing this in the future?}
+
+%=================================================================================
+% Assay Execution
+%=================================================================================
+\subsection{Device Fabrication \& Assay Execution}
+\label{sec:assay_execution}
+
+All devices, whether generated by hand or using \tool{}, require a domain-expert to ``validate'' the design.
+Since \bs{} nor the netlist do not account for physical attributes of fluids, this step is still necessary.
+A domain expert must ensure the geometries, channel widths, etc. are correct with respect to the specification and that the device will operate relative to fluidic attributes.
+We expect, through component generation, even if naive, to reduce this burden.
+However, because Inkwell generates an SVG\jason{give the acronym if Brian hasn't talked about it in \cref{sec:inkwell}}, there is no real time investment for a domain expert.
+The SVG, in this context, is then sent to Computer-Aided Design (CAD) software, where the device can then be fabricated using any of the techniques mentioned above.
+
+In practice, this experiment uses a CNC mill to mill a negative in acrylic.
+We then bond a glass layer to the acrylic layer.
+Once the bond has cured, I/O ports are then connected to their respective reservoirs and the device is ready to be used.
+The devices are capable of either being powered by gravity or, as in our case, external syringe pumps.

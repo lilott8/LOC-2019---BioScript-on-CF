@@ -1,0 +1,49 @@
+%=================================================================================
+% Results and Discussion
+%=================================================================================
+\section{Results \& Discussion}
+\label{sec:results_discussion}
+
+We measured the time it took to program an assay and synthesize a corresponding device.
+These assays are arbitrary in purpose; only including primitive operations (\textsf{mix}, \textsf{split}, \textsf{detect}, \textsf{heat}, and \textsf{dispose}/\textsf{dispense}).
+For the purposes of these experiments we assume simple components, e.g., all detection modules behave the same in form (one input, one output), or splits can only split into some power of 2 ($2^n$).
+Our intent is to demonstrate the efficacy of the workflow in its entirety, not highlight the features or limitations of any of the discrete tools used in this workflow or demonstrate a new or novel way to handle component selection or generation.
+Similarly, our experimental setup does not include the time taken to fabricate or execute the device as the fabrication of the device is dependent upon too many variables: the placement and routing algorithms used to synthesize the device, the actual device fabrication technique (photo-lithography, CNC mill, etc), or what type of device is being fabricated (continuous or active flow) in addition to assembly and setup.
+
+We generated \cref{tab:synthesis_time} using a 2.7 GHz Intel\texttrademark Core i7 processor, 8GB RAM, machine running macOS\texttrademark.
+To test the efficacy of \tool{}, we create various assays of increasing complexity as presented in \cref{tab:synthesis_time}.
+By leveraging \tool{}, we are capable of creating assays comprised of 50\footnote{A restriction in the way Inkwell handles placement and routing of components limits experimentation to 50.  A limitation that is currently being remedied, but not yet complete.} components in \jason{add time}.
+We acknowledge that these results are in a vacuum --- free from comparison of how traditional microfluidic devices are created.
+We have been unable to find any quantitative information regarding the time required to design and fabricate these devices.
+
+\begin{table*}[htb]
+\centering
+\caption{Results demonstrating the time it takes to express an assay (using \bs{}) and then synthesize the corresponding device (using Inkwell).  The results clearly demonstrate how well this workflow performs at building successively more complicated devices; a task that, when done by hand is exceedingly arduous and onerous.\jasoni{add times}}
+\label{tab:synthesis_time}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+Number of & \bs{} Time & Compilation Time & Synthesis Time & Total Time \\
+Components & (mm:ss) & (ss.ms) & (hh:mm:ss) & (hh:mm:ss) \\ \midrule
+4 & 00:26 & 0.2448 & 00:00:00 & 00:00:00\\
+6 & 00:45 & 0.2457 & 00:00:00 & 00:00:00\\
+16 & 02:48 & 0.2700 & 00:00:00 & 00:00:00\\
+24 & 03:03 & 0.2845 & 00:00:00 & 00:00:00\\
+50 & 06:49 & 0.3506 & 00:00:00 & 00:00:00 \\ 
+100 & 12:36 & 0.4226 & 00:00:00 & 00:00:00 \\
+1000 & 102:09 & 1.3520 & 00:00:00 & 00:00:00 \\
+\hline
+\end{tabular}
+\end{table*}
+
+Having demonstrated how we tested \tool{}, we now analyse and discuss the results of our experimentation.
+\tool{} is the first workflow of it's kind, capable of quickly and efficiently synthesizing assays of complexities far greater than what current practices allow.
+It is important to note that \tool{} does not track fluidic or device properties such as: fluid viscosity, fluid density, channel resistance, or length.
+This necessitates a domain expert to validate a design and make any modifications necessary to fabricate a functional device.
+Reducing the load of a scientist from manually placing and routing each component to quickly validating a device mask greatly reduces the time between assay expression and assay execution.
+A problem further discusses in \cref{sec:conclusion}.
+
+% \textit{This is arguably the most important section of your article.}
+
+% \textit{Your results should be organised into an orderly and logical sequence. Only the most relevant results should be described in the text; to highlight the most important points. Figures, tables, and equations should be used for purposes of clarity and brevity. Data should not be reproduced in more than one form, for example in both figures and tables, without good reason.}
+
+% \textit{The purpose of the discussion is to explain the meaning of your results and why they are important. You should state the impact of your results compared with recent work and relate it back to the problem or question you posed in your introduction. Ensure claims are backed up by evidence and explain any complex arguments.}
